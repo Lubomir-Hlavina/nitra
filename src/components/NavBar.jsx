@@ -132,6 +132,13 @@ const NavBar = () => {
                 >
                   Remeslá
                 </MenuItem>
+                <MenuItem
+                  component={Link}
+                  to="/podniky/hotely"
+                  onClick={handleMenuClose}
+                >
+                  Hotely
+                </MenuItem>
               </Menu>
             </Box>
           )}
@@ -139,7 +146,7 @@ const NavBar = () => {
       </AppBar>
 
       <Drawer
-        anchor="left"
+        anchor="right"
         open={mobileOpen}
         onClose={handleDrawerToggle}
         ModalProps={{ keepMounted: true }}
