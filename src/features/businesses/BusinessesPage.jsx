@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import PageHeading from '../../components/PageHeading';
+import { businesses, subCategoriesMap } from '../../data/businesses';
 import {
   Select,
   MenuItem,
@@ -41,125 +43,6 @@ const isBusinessOpen = (openingHours) => {
   return now >= openTime && now <= closeTime;
 };
 
-const businesses = [
-  {
-    id: 1,
-    name: 'Kaviareň Dolce',
-    category: 'gastro',
-    subCategory: 'kaviaren',
-    description:
-      'Domáca káva, pečené croissanty a útulné prostredie v centre Nitry.',
-    image: '../../assets/pancakes.jpg',
-    rating: 4.6,
-    openingHours: {
-      monday: { open: '08:00', close: '18:00' },
-      tuesday: { open: '08:00', close: '18:00' },
-      wednesday: { open: '08:00', close: '18:00' },
-      thursday: { open: '08:00', close: '18:00' },
-      friday: { open: '08:00', close: '18:00' },
-      saturday: { open: '09:00', close: '14:00' },
-      sunday: null,
-    },
-  },
-  {
-    id: 2,
-    name: 'Reštaurácia U Vlka',
-    category: 'gastro',
-    subCategory: 'restauracia',
-    description:
-      'Tradičná slovenská kuchyňa pripravená s láskou a domácimi surovinami.',
-    image: '../../assets/pancakes.jpg',
-    rating: 4.3,
-    openingHours: {
-      monday: { open: '11:00', close: '22:00' },
-      tuesday: { open: '11:00', close: '22:00' },
-      wednesday: { open: '11:00', close: '22:00' },
-      thursday: { open: '11:00', close: '22:00' },
-      friday: { open: '11:00', close: '23:00' },
-      saturday: { open: '12:00', close: '23:00' },
-      sunday: { open: '12:00', close: '21:00' },
-    },
-  },
-  {
-    id: 3,
-    name: 'Pizza Express',
-    category: 'gastro',
-    subCategory: 'fastfood',
-    description: 'Čerstvá pizza z pece, rýchle donášky až k vám domov.',
-    image: '../../assets/pancakes.jpg',
-    rating: 4.0,
-    openingHours: {
-      monday: { open: '10:00', close: '22:00' },
-      tuesday: { open: '10:00', close: '22:00' },
-      wednesday: { open: '10:00', close: '22:00' },
-      thursday: { open: '10:00', close: '22:00' },
-      friday: { open: '10:00', close: '23:00' },
-      saturday: { open: '11:00', close: '23:00' },
-      sunday: { open: '11:00', close: '21:00' },
-    },
-  },
-  {
-    id: 4,
-    name: 'Pub U Medveďa',
-    category: 'gastro',
-    subCategory: 'pub',
-    description: 'Široký výber remeselných pív a skvelá atmosféra.',
-    image: '../../assets/pancakes.jpg',
-    rating: 4.7,
-    openingHours: {
-      monday: { open: '16:00', close: '00:00' },
-      tuesday: { open: '16:00', close: '00:00' },
-      wednesday: { open: '16:00', close: '00:00' },
-      thursday: { open: '16:00', close: '01:00' },
-      friday: { open: '16:00', close: '02:00' },
-      saturday: { open: '18:00', close: '02:00' },
-      sunday: null,
-    },
-  },
-  {
-    id: 5,
-    name: 'Barber Nitra',
-    category: 'sluzby',
-    subCategory: 'barberi',
-    description: 'Profesionálne strihanie a starostlivosť o bradu.',
-    image: 'https://source.unsplash.com/random/400x300?barber-shop',
-    rating: 4.2,
-    openingHours: {
-      monday: { open: '09:00', close: '17:00' },
-      tuesday: { open: '09:00', close: '17:00' },
-      wednesday: { open: '09:00', close: '17:00' },
-      thursday: { open: '09:00', close: '17:00' },
-      friday: { open: '09:00', close: '17:00' },
-      saturday: { open: '09:00', close: '13:00' },
-      sunday: null,
-    },
-  },
-  {
-    id: 6,
-    name: 'Realitný maklér Peter',
-    category: 'sluzby',
-    subCategory: 'makleri',
-    description: 'Predaj a prenájom nehnuteľností s osobným prístupom.',
-    image: 'https://source.unsplash.com/random/400x300?real-estate',
-    rating: 3.9,
-    openingHours: {
-      monday: { open: '09:00', close: '17:00' },
-      tuesday: { open: '09:00', close: '17:00' },
-      wednesday: { open: '09:00', close: '17:00' },
-      thursday: { open: '09:00', close: '17:00' },
-      friday: { open: '09:00', close: '17:00' },
-      saturday: null,
-      sunday: null,
-    },
-  },
-];
-
-const subCategoriesMap = {
-  gastro: ['všetko', 'kaviaren', 'restauracia', 'fastfood', 'pub'],
-  sluzby: ['všetko', 'barberi', 'makleri'],
-  remesla: ['všetko'],
-};
-
 const BusinessesPage = () => {
   const { category } = useParams();
   const [selectedSubCategory, setSelectedSubCategory] = useState('všetko');
@@ -197,9 +80,9 @@ const BusinessesPage = () => {
 
   return (
     <Box p={3}>
-      <Typography variant="h4" gutterBottom>
+      <PageHeading>
         Podniky – {category.charAt(0).toUpperCase() + category.slice(1)}
-      </Typography>
+      </PageHeading>
 
       {availableSubCategories.length > 1 && (
         <Box mb={3}>
@@ -226,16 +109,6 @@ const BusinessesPage = () => {
               </FormControl>
             </Grid>
 
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                fullWidth
-                label="Hľadať podľa mena"
-                variant="outlined"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </Grid>
-
             <Grid item xs={12} sm={6} md={2}>
               <FormControl fullWidth>
                 <InputLabel id="sort-select-label">Zoradiť podľa</InputLabel>
@@ -248,6 +121,16 @@ const BusinessesPage = () => {
                   <MenuItem value="rating">Podľa hodnotenia</MenuItem>
                 </Select>
               </FormControl>
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={4}>
+              <TextField
+                fullWidth
+                label="Hľadať podľa mena"
+                variant="outlined"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
             </Grid>
 
             <Grid item xs={12} sm={6} md={2}>
@@ -265,7 +148,7 @@ const BusinessesPage = () => {
                     onChange={(e) => setShowOnlyOpen(e.target.checked)}
                     style={{ marginRight: '8px' }}
                   />
-                  Len otvorené
+                  Otvorené teraz
                 </label>
               </FormControl>
             </Grid>
@@ -287,6 +170,11 @@ const BusinessesPage = () => {
                   flexDirection: 'column',
                   height: '100%',
                   width: '100%',
+                  transition: 'transform 0.8s ease', // Smooth transition for scaling
+                  '&:hover': {
+                    transform: 'scale(1.05)', // Slightly scale up the card on hover
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)', // Optional: Add a shadow effect on hover
+                  },
                 }}
               >
                 <CardMedia
@@ -299,34 +187,62 @@ const BusinessesPage = () => {
                   image={biz.image}
                   alt={biz.name}
                 />
-                <CardContent sx={{ flexGrow: 1 }}>
-                  <Typography variant="h6" gutterBottom>
-                    {biz.name}
-                  </Typography>
 
-                  <RatingStars rating={biz.rating} />
+                <CardContent
+                  sx={{
+                    flexGrow: 1,
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    p: 2,
+                  }}
+                >
+                  <Box>
+                    <Typography variant="h6" sx={{ fontWeight: 600, mb: 0.5 }}>
+                      {biz.name}
+                    </Typography>
 
-                  <Typography
-                    variant="body2"
-                    color="text.secondary"
-                    sx={{
-                      display: '-webkit-box',
-                      WebkitLineClamp: 3,
-                      WebkitBoxOrient: 'vertical',
-                      overflow: 'hidden',
-                    }}
-                  >
-                    {biz.description}
-                  </Typography>
+                    <Box sx={{ mb: 1 }}>
+                      <RatingStars rating={biz.rating} />
+                    </Box>
+
+                    <Typography
+                      variant="body2"
+                      color="text.secondary"
+                      sx={{
+                        display: '-webkit-box',
+                        WebkitLineClamp: 3,
+                        WebkitBoxOrient: 'vertical',
+                        overflow: 'hidden',
+                        mb: 1.5,
+                      }}
+                    >
+                      {biz.description}
+                    </Typography>
+
+                    <Typography
+                      variant="caption"
+                      color="text.secondary"
+                      sx={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: 0.5,
+                        fontSize: '0.75rem',
+                        opacity: 0.8,
+                      }}
+                    >
+                      📍{biz.address}
+                    </Typography>
+                  </Box>
 
                   <Button
-                    fullWidth
                     variant="contained"
                     color={
                       isBusinessOpen(biz.openingHours) ? 'success' : 'error'
                     }
                     sx={{
-                      mt: 1,
+                      mt: 2,
+                      width: { xs: '100%', sm: 'auto' }, // On small screens, make it fullWidth, on larger screens, auto width
                       '&.Mui-disabled': {
                         backgroundColor: isBusinessOpen(biz.openingHours)
                           ? '#4caf50'
