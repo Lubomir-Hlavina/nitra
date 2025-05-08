@@ -1,15 +1,13 @@
 import React, { useState } from 'react';
 import PageHeading from '../../components/PageHeading';
-import { businesses, subCategoriesMap } from '../../data/businesses';
+import { businesses } from '../../data/businesses';
 import {
   Select,
   MenuItem,
   FormControl,
   InputLabel,
   TextField,
-  Tooltip,
 } from '@mui/material';
-import { useParams } from 'react-router-dom';
 import RatingStars from '../../components/RatingStars';
 import {
   Box,
@@ -19,7 +17,6 @@ import {
   CardContent,
   CardMedia,
   Button,
-  ButtonGroup,
 } from '@mui/material';
 
 // ✅ Pomocná funkcia na zistenie, či je podnik aktuálne otvorený
@@ -44,19 +41,11 @@ const isBusinessOpen = (openingHours) => {
 };
 
 const BusinessesPage = () => {
-  const { category } = useParams();
-  const [selectedSubCategory, setSelectedSubCategory] = useState('všetko');
   const [searchTerm, setSearchTerm] = useState('');
   const [sortOrder, setSortOrder] = useState('rating');
   const [showOnlyOpen, setShowOnlyOpen] = useState(false);
 
-  const filteredByCategory = businesses.filter((b) => b.category === category);
-  const filtered = filteredByCategory
-    .filter((b) =>
-      selectedSubCategory === 'všetko'
-        ? true
-        : b.subCategory === selectedSubCategory
-    )
+  const filtered = businesses
     .filter((b) => b.name.toLowerCase().includes(searchTerm.toLowerCase()))
     .filter((b) => (showOnlyOpen ? isBusinessOpen(b.openingHours) : true));
 
@@ -76,89 +65,62 @@ const BusinessesPage = () => {
   };
 
   const sortedBusinesses = sortBusinesses(filtered, sortOrder);
-  const availableSubCategories = subCategoriesMap[category] || ['všetko'];
 
   return (
     <Box p={3}>
-      <PageHeading>
-        Podniky – {category.charAt(0).toUpperCase() + category.slice(1)}
-      </PageHeading>
+      <PageHeading>Podniky</PageHeading>
 
-      {availableSubCategories.length > 1 && (
-        <Box mb={3}>
-          <Grid container spacing={2} alignItems="center">
-            <Grid item xs={12} sm={6} md={4}>
-              <FormControl fullWidth>
-                <InputLabel id="subcategory-select-label">
-                  Typ podniku
-                </InputLabel>
-                <Select
-                  labelId="subcategory-select-label"
-                  value={selectedSubCategory}
-                  label="Typ podniku"
-                  onChange={(e) => setSelectedSubCategory(e.target.value)}
-                >
-                  {availableSubCategories.map((subCat) => (
-                    <MenuItem key={subCat} value={subCat}>
-                      {subCat === 'všetko'
-                        ? 'Všetko'
-                        : subCat.charAt(0).toUpperCase() + subCat.slice(1)}
-                    </MenuItem>
-                  ))}
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={2}>
-              <FormControl fullWidth>
-                <InputLabel id="sort-select-label">Zoradiť podľa</InputLabel>
-                <Select
-                  labelId="sort-select-label"
-                  value={sortOrder}
-                  label="Zoradiť podľa"
-                  onChange={(e) => setSortOrder(e.target.value)}
-                >
-                  <MenuItem value="rating">Podľa hodnotenia</MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={4}>
-              <TextField
-                fullWidth
-                label="Hľadať podľa mena"
-                variant="outlined"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-            </Grid>
-
-            <Grid item xs={12} sm={6} md={2}>
-              <FormControl>
-                <label
-                  style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    cursor: 'pointer',
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    checked={showOnlyOpen}
-                    onChange={(e) => setShowOnlyOpen(e.target.checked)}
-                    style={{ marginRight: '8px' }}
-                  />
-                  Otvorené teraz
-                </label>
-              </FormControl>
-            </Grid>
+      <Box mb={3}>
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} sm={6} md={4}>
+            <TextField
+              fullWidth
+              label="Hľadať podľa mena"
+              variant="outlined"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </Grid>
-        </Box>
-      )}
+
+          <Grid item xs={12} sm={6} md={2}>
+            <FormControl fullWidth>
+              <InputLabel id="sort-select-label">Zoradiť podľa</InputLabel>
+              <Select
+                labelId="sort-select-label"
+                value={sortOrder}
+                label="Zoradiť podľa"
+                onChange={(e) => setSortOrder(e.target.value)}
+              >
+                <MenuItem value="rating">Podľa hodnotenia</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={2}>
+            <FormControl>
+              <label
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  cursor: 'pointer',
+                }}
+              >
+                <input
+                  type="checkbox"
+                  checked={showOnlyOpen}
+                  onChange={(e) => setShowOnlyOpen(e.target.checked)}
+                  style={{ marginRight: '8px' }}
+                />
+                Otvorené teraz
+              </label>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Box>
 
       {sortedBusinesses.length === 0 ? (
         <Typography variant="body1">
-          Žiadne podniky v tejto kategórii/subkategórii.
+          Žiadne podniky nezodpovedajú hľadaniu.
         </Typography>
       ) : (
         <Grid container spacing={3}>
@@ -170,10 +132,10 @@ const BusinessesPage = () => {
                   flexDirection: 'column',
                   height: '100%',
                   width: '100%',
-                  transition: 'transform 0.8s ease', // Smooth transition for scaling
+                  transition: 'transform 0.8s ease',
                   '&:hover': {
-                    transform: 'scale(1.05)', // Slightly scale up the card on hover
-                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)', // Optional: Add a shadow effect on hover
+                    transform: 'scale(1.05)',
+                    boxShadow: '0 4px 20px rgba(0, 0, 0, 0.15)',
                   },
                 }}
               >
@@ -242,7 +204,7 @@ const BusinessesPage = () => {
                     }
                     sx={{
                       mt: 2,
-                      width: { xs: '100%', sm: 'auto' }, // On small screens, make it fullWidth, on larger screens, auto width
+                      width: { xs: '100%', sm: 'auto' },
                       '&.Mui-disabled': {
                         backgroundColor: isBusinessOpen(biz.openingHours)
                           ? '#4caf50'
